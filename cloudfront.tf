@@ -2,22 +2,43 @@ data "aws_cloudfront_cache_policy" "managed_caching_optimized" {
   name = "Managed-CachingOptimized"
 }
 
+resource "aws_cloudfront_origin_access_control" "cloudfront_origin_access_control" {
+  name                              = aws_s3_bucket.s3_web.bucket_domain_name
+  origin_access_control_origin_type = "s3"
+  signing_behavior                  = "always"
+  signing_protocol                  = "sigv4"
+}
+
 resource "aws_cloudfront_distribution" "cloudfront_distribution" {
+  default_root_object = "index.html"
+  tags = {
+    "application" = "lostindusk"
+  }
+  tags_all = {
+    "application" = "lostindusk"
+  }
   aliases      = ["lostindusk.com"]
   http_version = "http2and3"
   price_class  = "PriceClass_100"
 
+  custom_error_response {
+    error_caching_min_ttl = 0
+    error_code            = 403
+    response_code         = 200
+    response_page_path    = "/index.html"
+  }
+
+  custom_error_response {
+    error_caching_min_ttl = 0
+    error_code            = 404
+    response_code         = 200
+    response_page_path    = "/index.html"
+  }
+
   origin {
-    domain_name = aws_s3_bucket_website_configuration.s3_web_website_configuration.website_endpoint
-    origin_id   = aws_s3_bucket.s3_web.bucket_regional_domain_name
-
-    custom_origin_config {
-      http_port              = 80
-      https_port             = 443
-      origin_protocol_policy = "http-only"
-      origin_ssl_protocols   = ["TLSv1.2"]
-    }
-
+    domain_name              = aws_s3_bucket.s3_web.bucket_regional_domain_name
+    origin_id                = aws_s3_bucket.s3_web.bucket_regional_domain_name
+    origin_access_control_id = aws_cloudfront_origin_access_control.cloudfront_origin_access_control.id
   }
 
   default_cache_behavior {
