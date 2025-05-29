@@ -1,5 +1,3 @@
-data "aws_caller_identity" "current" {}
-
 resource "aws_s3_bucket" "s3_web" {
   bucket              = "lostindusk.com"
   object_lock_enabled = false
@@ -34,7 +32,7 @@ resource "aws_s3_bucket_ownership_controls" "s3_web_ownership_controls" {
   bucket = aws_s3_bucket.s3_web.id
 
   rule {
-    object_ownership = "BucketOwnerPreferred"
+    object_ownership = "BucketOwnerEnforced"
   }
 }
 
