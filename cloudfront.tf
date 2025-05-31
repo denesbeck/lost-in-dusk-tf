@@ -14,9 +14,6 @@ resource "aws_cloudfront_distribution" "cloudfront_distribution" {
   tags = {
     "application" = "lostindusk"
   }
-  tags_all = {
-    "application" = "lostindusk"
-  }
   aliases      = ["lostindusk.com"]
   http_version = "http2and3"
   price_class  = "PriceClass_100"

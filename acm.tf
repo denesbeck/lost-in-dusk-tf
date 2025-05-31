@@ -6,7 +6,4 @@ resource "aws_acm_certificate" "acm_certificate" {
   tags = {
     "application" = "lostindusk"
   }
-  tags_all = {
-    "application" = "lostindusk"
-  }
 }

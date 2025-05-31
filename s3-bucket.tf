@@ -5,10 +5,6 @@ resource "aws_s3_bucket" "s3_web" {
   tags = {
     "application" = "lostindusk"
   }
-
-  tags_all = {
-    "application" = "lostindusk"
-  }
 }
 
 resource "aws_s3_bucket_versioning" "s3_web_versioning" {

@@ -19,3 +19,9 @@ variable "ssm_kms_key_id" {
   default     = "a27b309f-d9df-4fd0-a3ad-60afb50eab73"
   description = "SSM KMS Key Id"
 }
+
+variable "lambda_contact" {
+  type        = string
+  default     = "lost-in-dusk-contact"
+  description = "Name of the contact lambda function"
+}
