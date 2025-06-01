@@ -1,9 +1,18 @@
+locals {
+  int_response_headers = {
+    "method.response.header.Access-Control-Allow-Headers" = "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+    "method.response.header.Access-Control-Allow-Methods" = "'OPTIONS,POST'"
+    "method.response.header.Access-Control-Allow-Origin"  = "'https://lostindusk.com'"
+  }
+  gw_response_headers = {
+    "gatewayresponse.header.Access-Control-Allow-Headers" : "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+    "gatewayresponse.header.Access-Control-Allow-Methods" : "'OPTIONS,POST'"
+    "gatewayresponse.header.Access-Control-Allow-Origin" : "'https://lostindusk.com'"
+  }
+}
+
 resource "aws_api_gateway_rest_api" "api_gw_rest_api" {
   name = "lost-in-dusk"
-
-  endpoint_configuration {
-    types = ["REGIONAL"]
-  }
 
   tags = {
     application = "lostindusk"
@@ -55,15 +64,11 @@ resource "aws_api_gateway_method_response" "options_response_200" {
 }
 
 resource "aws_api_gateway_integration_response" "options_integration_response" {
-  rest_api_id = aws_api_gateway_rest_api.api_gw_rest_api.id
-  resource_id = aws_api_gateway_resource.api_gw_resource.id
-  http_method = aws_api_gateway_method.options_method.http_method
-  status_code = aws_api_gateway_method_response.options_response_200.status_code
-  response_parameters = {
-    "method.response.header.Access-Control-Allow-Headers" = "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
-    "method.response.header.Access-Control-Allow-Methods" = "'OPTIONS,POST'"
-    "method.response.header.Access-Control-Allow-Origin"  = "'https://lostindusk.com'"
-  }
+  rest_api_id         = aws_api_gateway_rest_api.api_gw_rest_api.id
+  resource_id         = aws_api_gateway_resource.api_gw_resource.id
+  http_method         = aws_api_gateway_method.options_method.http_method
+  status_code         = aws_api_gateway_method_response.options_response_200.status_code
+  response_parameters = local.int_response_headers
 }
 
 resource "aws_api_gateway_method" "post_method" {
@@ -90,6 +95,29 @@ resource "aws_lambda_permission" "apigw_lambda" {
 
   source_arn = "arn:aws:execute-api:${var.region}:${data.aws_caller_identity.current.account_id}:${aws_api_gateway_rest_api.api_gw_rest_api.id}/*/POST/contact"
 }
+
+resource "aws_api_gateway_gateway_response" "default_4xx" {
+  rest_api_id   = aws_api_gateway_rest_api.api_gw_rest_api.id
+  response_type = "DEFAULT_4XX"
+
+  response_templates = {
+    "application/json" = "{\"message\":$context.error.messageString}"
+  }
+
+  response_parameters = local.gw_response_headers
+}
+
+resource "aws_api_gateway_gateway_response" "default_5xx" {
+  rest_api_id   = aws_api_gateway_rest_api.api_gw_rest_api.id
+  response_type = "DEFAULT_5XX"
+
+  response_templates = {
+    "application/json" = "{\"message\":$context.error.messageString}"
+  }
+
+  response_parameters = local.gw_response_headers
+}
+
 
 resource "aws_api_gateway_stage" "v1_stage" {
   deployment_id = aws_api_gateway_deployment.api_gw_deployment.id
