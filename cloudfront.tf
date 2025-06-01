@@ -1,7 +1,3 @@
-data "aws_cloudfront_cache_policy" "managed_caching_optimized" {
-  name = "Managed-CachingOptimized"
-}
-
 resource "aws_cloudfront_origin_access_control" "cloudfront_origin_access_control" {
   name                              = aws_s3_bucket.s3_web.bucket_domain_name
   origin_access_control_origin_type = "s3"

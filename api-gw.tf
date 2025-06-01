@@ -1,13 +1,18 @@
 locals {
+  allowed_headers = "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+  allowed_methods = "'OPTIONS,POST'"
+  allowed_origin  = "'https://lostindusk.com'"
+
   int_response_headers = {
-    "method.response.header.Access-Control-Allow-Headers" = "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
-    "method.response.header.Access-Control-Allow-Methods" = "'OPTIONS,POST'"
-    "method.response.header.Access-Control-Allow-Origin"  = "'https://lostindusk.com'"
+    "method.response.header.Access-Control-Allow-Headers" = local.allowed_headers
+    "method.response.header.Access-Control-Allow-Methods" = local.allowed_methods
+    "method.response.header.Access-Control-Allow-Origin"  = local.allowed_origin
   }
+
   gw_response_headers = {
-    "gatewayresponse.header.Access-Control-Allow-Headers" : "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
-    "gatewayresponse.header.Access-Control-Allow-Methods" : "'OPTIONS,POST'"
-    "gatewayresponse.header.Access-Control-Allow-Origin" : "'https://lostindusk.com'"
+    "gatewayresponse.header.Access-Control-Allow-Headers" = local.allowed_headers
+    "gatewayresponse.header.Access-Control-Allow-Methods" = local.allowed_methods
+    "gatewayresponse.header.Access-Control-Allow-Origin"  = local.allowed_origin
   }
 }
 
