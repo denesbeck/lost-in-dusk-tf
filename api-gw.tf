@@ -1,6 +1,10 @@
 resource "aws_api_gateway_rest_api" "api_gw_rest_api" {
   name = "lost-in-dusk"
 
+  endpoint_configuration {
+    types = ["REGIONAL"]
+  }
+
   tags = {
     application = "lostindusk"
   }
