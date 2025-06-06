@@ -7,6 +7,30 @@ resource "aws_s3_bucket" "s3_web" {
   }
 }
 
+resource "aws_s3_bucket" "s3_lambda_functions" {
+  bucket = "lambda-functions-5d47b429"
+}
+resource "aws_s3_bucket" "s3_lambda_layers" {
+  bucket = "lambda-layers-fb0156a1"
+
+}
+resource "aws_s3_bucket" "s3_lambda_hashes" {
+  bucket = "lambda-hashes-ac780253"
+}
+
+import {
+  to = aws_s3_bucket.s3_lambda_functions
+  id = "lambda-functions-5d47b429"
+}
+import {
+  to = aws_s3_bucket.s3_lambda_layers
+  id = "lambda-layers-fb0156a1"
+}
+import {
+  to = aws_s3_bucket.s3_lambda_hashes
+  id = "lambda-hashes-ac780253"
+}
+
 resource "aws_s3_bucket_versioning" "s3_web_versioning" {
   bucket = aws_s3_bucket.s3_web.id
 
