@@ -131,14 +131,25 @@ resource "aws_api_gateway_stage" "v1_stage" {
 }
 
 resource "aws_api_gateway_deployment" "api_gw_deployment" {
+  rest_api_id = aws_api_gateway_rest_api.api_gw_rest_api.id
+
+  triggers = {
+    redeploy_hash = sha1(jsonencode([
+      aws_api_gateway_method.post_method.id,
+      aws_api_gateway_integration.post_integration.id,
+      aws_api_gateway_method.options_method.id,
+      aws_api_gateway_integration.options_integration.id,
+      aws_api_gateway_integration_response.options_integration_response.id,
+      aws_api_gateway_method_response.options_response_200.id
+    ]))
+  }
+
   depends_on = [
     aws_api_gateway_integration.post_integration,
     aws_api_gateway_integration.options_integration,
     aws_api_gateway_integration_response.options_integration_response,
     aws_api_gateway_method_response.options_response_200
   ]
-
-  rest_api_id = aws_api_gateway_rest_api.api_gw_rest_api.id
 }
 
 resource "aws_api_gateway_usage_plan" "api_gw_usage_plan" {
