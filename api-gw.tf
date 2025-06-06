@@ -125,7 +125,7 @@ resource "aws_api_gateway_gateway_response" "default_5xx" {
 
 
 resource "aws_api_gateway_stage" "v1_stage" {
-  deployment_id = aws_api_gateway_deployment.api_gw_deployment.id
+  deployment_id = "cdzk7d" #aws_api_gateway_deployment.api_gw_deployment.id
   rest_api_id   = aws_api_gateway_rest_api.api_gw_rest_api.id
   stage_name    = "v1"
 }
