@@ -48,7 +48,6 @@ resource "aws_api_gateway_integration" "options_integration" {
     {"statusCode": 200}"
     EOF
   }
-
 }
 
 resource "aws_api_gateway_method_response" "options_response_200" {
@@ -108,7 +107,6 @@ resource "aws_api_gateway_gateway_response" "default_4xx" {
   response_templates = {
     "application/json" = "{\"message\":$context.error.messageString}"
   }
-
   response_parameters = local.gw_response_headers
 }
 
@@ -122,7 +120,6 @@ resource "aws_api_gateway_gateway_response" "default_5xx" {
 
   response_parameters = local.gw_response_headers
 }
-
 
 resource "aws_api_gateway_stage" "v1_stage" {
   deployment_id = aws_api_gateway_deployment.api_gw_deployment.id

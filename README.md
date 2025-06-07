@@ -59,7 +59,7 @@ terraform init
 
 This will automatically detect and configure the remote backend specified in `providers.tf`.
 
-### 4. Plan & Apply (via CLI or HCP UI)
+### 4. Plan & Apply (via CLI and HCP UI)
 
 You can preview changes locally with:
 
