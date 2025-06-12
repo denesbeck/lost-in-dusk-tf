@@ -121,7 +121,12 @@ resource "aws_iam_role_policy" "lambda_deploy_policy" {
       {
         "Effect" : "Allow",
         "Action" : "iam:PassRole",
-        "Resource" : "arn:aws:iam::874820004530:role/lost-in-dusk-contact-lambda"
+        "Resource" : "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/lost-in-dusk-contact-lambda"
+      },
+      {
+        "Effect" : "Allow",
+        "Action" : "lambda:GetLayerVersion",
+        "Resource" : "arn:aws:lambda:eu-central-1:${data.aws_caller_identity.current.account_id}:layer:*"
       },
       {
         Sid      = "AllowSTSAccess",
