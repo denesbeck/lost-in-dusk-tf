@@ -58,7 +58,12 @@ resource "aws_iam_policy" "lambda_ses_send_policy" {
         Sid      = "AllowSESSendFromVerifiedIdentity",
         Effect   = "Allow",
         Action   = "ses:SendEmail",
-        Resource = "arn:aws:ses:${var.region}:${data.aws_caller_identity.current.account_id}:identity/lostindusk.com"
+        Resource = "arn:aws:ses:${var.region}:${data.aws_caller_identity.current.account_id}:identity/*"
+        Condition : {
+          "StringEquals" : {
+            "ses:FromAddress" : "contact@lostindusk.com"
+          }
+        }
       }
     ]
   })
