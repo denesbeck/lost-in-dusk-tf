@@ -119,6 +119,11 @@ resource "aws_iam_role_policy" "lambda_deploy_policy" {
         Resource = "*"
       },
       {
+        "Effect" : "Allow",
+        "Action" : "iam:PassRole",
+        "Resource" : "arn:aws:iam::874820004530:role/lost-in-dusk-contact-lambda"
+      },
+      {
         Sid      = "AllowSTSAccess",
         Effect   = "Allow",
         Action   = "sts:GetCallerIdentity",
