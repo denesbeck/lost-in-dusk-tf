@@ -48,6 +48,28 @@ resource "aws_iam_role_policy_attachment" "lambda_parameter_store_policy_attachm
   policy_arn = aws_iam_policy.lambda_parameter_store_policy.arn
 }
 
+resource "aws_iam_policy" "lambda_ses_send_policy" {
+  name = "LambdaSESSendPolicy"
+
+  policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Sid      = "AllowSESSendFromVerifiedIdentity",
+        Effect   = "Allow",
+        Action   = "ses:SendEmail",
+        Resource = "arn:aws:ses:${var.region}:${data.aws_caller_identity.current.account_id}:identity/lostindusk.com"
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "lambda_ses_send_policy_attachment" {
+  role       = aws_iam_role.lambda_exec_role.name
+  policy_arn = aws_iam_policy.lambda_ses_send_policy.arn
+}
+
+
 resource "aws_iam_openid_connect_provider" "github" {
   url             = "https://token.actions.githubusercontent.com"
   client_id_list  = ["sts.amazonaws.com"]
