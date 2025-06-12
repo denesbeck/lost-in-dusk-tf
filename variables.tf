@@ -25,3 +25,9 @@ variable "lambda_contact" {
   default     = "lost-in-dusk-contact"
   description = "Name of the contact lambda function"
 }
+
+variable "lambda_functions_repo" {
+  type        = string
+  default     = "denesbeck/lambda-functions"
+  description = "github repository for the Lambda functions in the format 'owner/repo'"
+}

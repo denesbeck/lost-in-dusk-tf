@@ -65,5 +65,23 @@ resource "aws_s3_bucket_acl" "s3_web_acl" {
 
 resource "aws_s3_bucket_policy" "s3_web_policy" {
   bucket = aws_s3_bucket.s3_web.id
-  policy = data.aws_iam_policy_document.allow_cloudfront_access.json
+  policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Sid    = "AllowCloudFrontServicePrincipal",
+        Effect = "Allow",
+        Principal = {
+          Service = "cloudfront.amazonaws.com"
+        },
+        Action   = "s3:GetObject",
+        Resource = "${aws_s3_bucket.s3_web.arn}/*",
+        Condition = {
+          StringEquals = {
+            "AWS:SourceArn" = "arn:aws:cloudfront::${data.aws_caller_identity.current.account_id}:distribution/${aws_cloudfront_distribution.cloudfront_distribution.id}"
+          }
+        }
+      }
+    ]
+  })
 }
