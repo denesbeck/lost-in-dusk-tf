@@ -20,12 +20,6 @@ variable "ssm_kms_key_id" {
   description = "SSM KMS Key Id"
 }
 
-variable "lambda_contact" {
-  type        = string
-  default     = "lost-in-dusk-contact"
-  description = "Name of the contact lambda function"
-}
-
 variable "lambda_functions_repo" {
   type        = string
   default     = "denesbeck/lambda-functions"

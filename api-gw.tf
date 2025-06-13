@@ -17,7 +17,7 @@ locals {
 }
 
 resource "aws_api_gateway_rest_api" "api_gw_rest_api" {
-  name = "lost-in-dusk"
+  name = "lostindusk"
 
   tags = {
     application = "lostindusk"
@@ -88,13 +88,13 @@ resource "aws_api_gateway_integration" "post_integration" {
   http_method             = aws_api_gateway_method.post_method.http_method
   integration_http_method = "POST"
   type                    = "AWS_PROXY"
-  uri                     = data.aws_lambda_function.lambda_contact.invoke_arn
+  uri                     = aws_lambda_function.lostindusk_contact.invoke_arn
 }
 
 resource "aws_lambda_permission" "apigw_lambda" {
   statement_id  = "AllowExecutionFromAPIGateway"
   action        = "lambda:InvokeFunction"
-  function_name = "lost-in-dusk-contact"
+  function_name = aws_lambda_function.lostindusk_contact.function_name
   principal     = "apigateway.amazonaws.com"
 
   source_arn = "arn:aws:execute-api:${var.region}:${data.aws_caller_identity.current.account_id}:${aws_api_gateway_rest_api.api_gw_rest_api.id}/*/POST/contact"
@@ -154,7 +154,7 @@ resource "aws_api_gateway_deployment" "api_gw_deployment" {
 }
 
 resource "aws_api_gateway_usage_plan" "api_gw_usage_plan" {
-  name = "lost-in-dusk-contact"
+  name = "LostInDuskContactUsagePlan"
 
   api_stages {
     api_id = aws_api_gateway_rest_api.api_gw_rest_api.id
