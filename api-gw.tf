@@ -140,12 +140,12 @@ resource "aws_api_gateway_deployment" "api_gw_deployment" {
 
   triggers = {
     redeploy_hash = sha1(jsonencode([
-      aws_api_gateway_method.post_method.id,
-      aws_api_gateway_integration.post_integration.id,
-      aws_api_gateway_method.options_method.id,
-      aws_api_gateway_integration.options_integration.id,
-      aws_api_gateway_integration_response.options_integration_response.id,
-      aws_api_gateway_method_response.options_response_200.id
+      aws_api_gateway_method.post_method,
+      aws_api_gateway_integration.post_integration,
+      aws_api_gateway_method.options_method,
+      aws_api_gateway_integration.options_integration,
+      aws_api_gateway_integration_response.options_integration_response,
+      aws_api_gateway_method_response.options_response_200
     ]))
   }
 
