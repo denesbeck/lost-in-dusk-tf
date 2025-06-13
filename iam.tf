@@ -148,7 +148,7 @@ resource "aws_iam_role_policy" "lambda_deploy_policy" {
       {
         "Effect" : "Allow",
         "Action" : "iam:PassRole",
-        "Resource" : "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/lost-in-dusk-contact-lambda"
+        "Resource" : "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/*"
       },
       {
         "Effect" : "Allow",
