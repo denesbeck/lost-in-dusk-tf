@@ -80,6 +80,10 @@ resource "aws_api_gateway_method" "post_method" {
   http_method   = "POST"
   resource_id   = aws_api_gateway_resource.api_gw_resource.id
   rest_api_id   = aws_api_gateway_rest_api.api_gw_rest_api.id
+
+  request_models = {
+    "application/json" = "Empty"
+  }
 }
 
 resource "aws_api_gateway_integration" "post_integration" {
