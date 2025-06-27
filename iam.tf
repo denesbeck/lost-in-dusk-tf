@@ -17,8 +17,10 @@ resource "aws_iam_role" "lambda_exec_role" {
   }
 }
 
-resource "aws_iam_policy" "lambda_parameter_store_policy" {
+resource "aws_iam_role_policy" "lambda_parameter_store_policy" {
   name = "LambdaParameterStorePolicy"
+  role = aws_iam_role.lambda_exec_role.id
+
   policy = jsonencode({
     Version : "2012-10-17",
     Statement : [
@@ -43,13 +45,9 @@ resource "aws_iam_role_policy_attachment" "lambda_basic_exec_policy_attachment" 
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
 }
 
-resource "aws_iam_role_policy_attachment" "lambda_parameter_store_policy_attachment" {
-  role       = aws_iam_role.lambda_exec_role.name
-  policy_arn = aws_iam_policy.lambda_parameter_store_policy.arn
-}
-
-resource "aws_iam_policy" "lambda_ses_send_policy" {
+resource "aws_iam_role_policy" "lambda_ses_send_policy" {
   name = "LambdaSESSendPolicy"
+  role = aws_iam_role.lambda_exec_role.id
 
   policy = jsonencode({
     Version = "2012-10-17",
@@ -68,12 +66,6 @@ resource "aws_iam_policy" "lambda_ses_send_policy" {
     ]
   })
 }
-
-resource "aws_iam_role_policy_attachment" "lambda_ses_send_policy_attachment" {
-  role       = aws_iam_role.lambda_exec_role.name
-  policy_arn = aws_iam_policy.lambda_ses_send_policy.arn
-}
-
 
 resource "aws_iam_openid_connect_provider" "github" {
   url             = "https://token.actions.githubusercontent.com"

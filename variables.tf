@@ -23,5 +23,5 @@ variable "ssm_kms_key_id" {
 variable "lambda_functions_repo" {
   type        = string
   default     = "denesbeck/lambda-functions"
-  description = "github repository for the Lambda functions in the format 'owner/repo'"
+  description = "GitHub repository for the Lambda functions in the format `owner/repo`"
 }
