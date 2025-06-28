@@ -25,3 +25,9 @@ variable "lambda_functions_repo" {
   default     = "denesbeck/lambda-functions"
   description = "GitHub repository for the Lambda functions in the format `owner/repo`"
 }
+
+variable "timezone" {
+  type        = string
+  default     = "Europe/Berlin"
+  description = "Timezone"
+}

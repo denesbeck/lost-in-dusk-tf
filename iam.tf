@@ -1,5 +1,73 @@
-resource "aws_iam_role" "lambda_exec_role" {
-  name = "LostInDuskContactLambdaRole"
+resource "aws_iam_role" "scheduler_role" {
+  name = "SchedulerRole"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [{
+      Action = "sts:AssumeRole",
+      Effect = "Allow",
+      Principal = {
+        Service = "scheduler.amazonaws.com"
+      }
+    }]
+  })
+
+  tags = {
+    "application" = "common"
+  }
+}
+
+resource "aws_iam_role_policy_attachment" "scheduler_lambda_invoke_policy" {
+  role       = aws_iam_role.scheduler_role.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaRole"
+}
+
+resource "aws_iam_role" "lambda_layer_cleanup" {
+  name = "LambdaLayerCleanupRole"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [{
+      Action = "sts:AssumeRole",
+      Effect = "Allow",
+      Principal = {
+        Service = "lambda.amazonaws.com"
+      }
+    }]
+  })
+
+  tags = {
+    "application" = "common"
+  }
+}
+
+resource "aws_iam_role_policy_attachment" "lambda_layer_cleanup_basic_exec_policy" {
+  role       = aws_iam_role.lambda_layer_cleanup.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+}
+
+resource "aws_iam_role_policy" "lambda_layer_policy" {
+  name = "LambdaLayerPolicy"
+  role = aws_iam_role.lambda_layer_cleanup.id
+
+  policy = jsonencode({
+    Version : "2012-10-17",
+    Statement : [
+      {
+        Sid : "AllowKmsAndSsmAccess",
+        "Effect" : "Allow",
+        "Action" : [
+          "lambda:DeleteLayerVersion",
+          "lambda:ListLayers"
+        ],
+        "Resource" : "*"
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role" "lostindusk_contact" {
+  name = "LostInDuskContactRole"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17",
@@ -17,9 +85,14 @@ resource "aws_iam_role" "lambda_exec_role" {
   }
 }
 
+resource "aws_iam_role_policy_attachment" "lostindusk_contact_basic_exec_policy" {
+  role       = aws_iam_role.lostindusk_contact.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+}
+
 resource "aws_iam_role_policy" "lambda_parameter_store_policy" {
   name = "LambdaParameterStorePolicy"
-  role = aws_iam_role.lambda_exec_role.id
+  role = aws_iam_role.lostindusk_contact.id
 
   policy = jsonencode({
     Version : "2012-10-17",
@@ -40,14 +113,9 @@ resource "aws_iam_role_policy" "lambda_parameter_store_policy" {
   })
 }
 
-resource "aws_iam_role_policy_attachment" "lambda_basic_exec_policy_attachment" {
-  role       = aws_iam_role.lambda_exec_role.name
-  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
-}
-
 resource "aws_iam_role_policy" "lambda_ses_send_policy" {
   name = "LambdaSESSendPolicy"
-  role = aws_iam_role.lambda_exec_role.id
+  role = aws_iam_role.lostindusk_contact.id
 
   policy = jsonencode({
     Version = "2012-10-17",
@@ -125,7 +193,6 @@ resource "aws_iam_role_policy" "lambda_deploy_policy" {
         Sid    = "AllowLambdaManagement",
         Effect = "Allow",
         Action = [
-          "lambda:CreateFunction",
           "lambda:UpdateFunctionCode",
           "lambda:UpdateFunctionConfiguration",
           "lambda:PublishVersion",
