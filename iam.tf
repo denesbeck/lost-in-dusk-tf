@@ -54,10 +54,11 @@ resource "aws_iam_role_policy" "lambda_layer_policy" {
     Version : "2012-10-17",
     Statement : [
       {
-        Sid : "AllowKmsAndSsmAccess",
+        Sid : "ListDeleteLambdaLayers",
         "Effect" : "Allow",
         "Action" : [
           "lambda:DeleteLayerVersion",
+          "lambda:ListLayerVersions",
           "lambda:ListLayers"
         ],
         "Resource" : "*"
