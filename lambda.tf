@@ -8,8 +8,3 @@ resource "aws_lambda_function" "lostindusk_contact" {
     ignore_changes = all
   }
 }
-
-import {
-  to = aws_lambda_function.lostindusk_contact
-  id = "LostInDuskContact"
-}
